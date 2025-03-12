@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, SecondViewControllerDelegate {
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -15,31 +15,6 @@ class ViewController: UIViewController {
     print("1 ViewController.viewDidLoad()")
 
     setupUI()
-  }
-
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    print("2 ViewController.viewWillAppear()")
-  }
-
-  override func viewIsAppearing(_ animated: Bool) {
-    super.viewIsAppearing(animated)
-    print("3 ViewController.viewIsAppearing()")
-  }
-
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    print("4 ViewController.viewDidAppear()")
-  }
-
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    print("5 ViewController.viewWillDisappear()")
-  }
-
-  override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-    print("6 ViewController.viewDidDisappear()")
   }
 
   func setupUI() {
@@ -66,8 +41,13 @@ class ViewController: UIViewController {
       self.view.addSubview(button)
   }
     
+    func didDismissSecondViewController(message: String) {
+          print("SecondViewController에서 전달받은 메시지: \(message)")
+      }
+    
     @objc func goSecond() {
         let secondVC = SecondViewController()
+        secondVC.delegate = self
         self.present(secondVC, animated: true)
     }
 }
