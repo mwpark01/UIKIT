@@ -57,6 +57,8 @@ class ViewController: UIViewController, SecondViewControllerDelegate {
             button.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
             button.heightAnchor.constraint(equalToConstant: 40)
           ])
+      // 만약에 addSubview를 여기에다가 실행시킬 경우 에러 발생한다!!
+      // button과 label이 먼저 생성되어야 제약조건을 추가할 수 있다!!
   }
     
     func didDismissSecondViewController(message: String) {
