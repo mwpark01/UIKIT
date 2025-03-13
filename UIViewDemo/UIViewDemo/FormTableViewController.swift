@@ -48,9 +48,9 @@ class FormTableViewController: UITableViewController {
         
         // 셀 설정(설정을 셀에 삽입)
         var config = UIListContentConfiguration.subtitleCell()
-        config.text = "\(indexPath.section),\(indexPath.row)"
+        config.text = "Section: \(indexPath.section), Row: \(indexPath.row)"
         cell.contentConfiguration = config
-        cell.backgroundColor = .systemGray
+//        cell.backgroundColor = .systemGray
         
         return cell
     }
