@@ -46,8 +46,12 @@ class FormTableViewController: UITableViewController {
         // 생성자로 만들어준다.
         let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
         
-        // Configure the cell...
+        // 셀 설정(설정을 셀에 삽입)
+        var config = UIListContentConfiguration.subtitleCell()
+        config.text = "\(indexPath.section),\(indexPath.row)"
+        cell.contentConfiguration = config
         cell.backgroundColor = .systemGray
+        
         return cell
     }
     
