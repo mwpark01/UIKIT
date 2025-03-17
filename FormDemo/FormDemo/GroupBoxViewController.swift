@@ -49,6 +49,8 @@ class GroupBoxViewController: UIViewController {
         // 텍스트필드
         textField.borderStyle = .roundedRect
         textField.placeholder = "텍스트 필드"
+        // 텍스트필드의 속성을 직접 사용하기 위한 코드
+        textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
         groupBox.addSubview(textField)
         
@@ -71,6 +73,38 @@ class GroupBoxViewController: UIViewController {
         // 토클이 켜져있는지 여부
         flag = toggle.isOn
         print("flag: \(flag)")
+    }
+}
+
+extension GroupBoxViewController: UITextFieldDelegate {
+    // 편집 가능 여부 -> toggle 상태
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return flag
+    }
+    
+    // 텍스트 필드 편집 시작
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        print("편집 시작")
+    }
+    
+    // 텍스트 필드 문자 입력
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // 현재 입력한 값
+        let currentText = textField.text ?? ""
+        // 현재까지 입력한 값들
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        // 현재까지 입력한 값들 + 현재 입력한 값
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+        
+        print("실제 입력 값: \(string)")
+        print("현재 텍스트 필드 값: \(currentText)")
+        print("최종 업데이트 텍스트: \(updatedText)")
+        
+        return true
+    }
+     // 편집 종료
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        print("편집 종료")
     }
 }
 
