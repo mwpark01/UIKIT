@@ -25,6 +25,9 @@ class ViewController: UIViewController {
         // 이미지 표시
         setupImages()
         
+        // 이미지 컨텐츠 모드(이미지 size 조정)
+        setupImageContentMode()
+        
         // SF Symbol 표시
         setupSFSymbols()
     }
@@ -158,6 +161,49 @@ class ViewController: UIViewController {
         ])
     }
     
+    // MARK: - 이미지 컨텐츠 모드
+    func setupImageContentMode() {
+        addImageContentModeWith(title: "2-1. 이미지 컨텐츠 모드 (aspectFill)", contentMode: .scaleAspectFill)
+        
+        addImageContentModeWith(title: "2-2. 이미지 컨텐츠 모드 (aspectFit)", contentMode: .scaleAspectFit)
+        
+        addImageContentModeWith(title: "2-3. 이미지 컨텐츠 모드 (scaleToFill)", contentMode: .scaleToFill)
+    }
+    
+    // 이미지 컨텐츠 모드 추가
+      func addImageContentModeWith(title: String, contentMode: UIView.ContentMode) {
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = .systemFont(ofSize: 24)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(titleLabel)
+
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "car")
+        imageView.backgroundColor = .black
+        imageView.contentMode = contentMode
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(imageView)
+
+        stackView.addArrangedSubview(containerView)
+
+        NSLayoutConstraint.activate([
+          titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor),
+          titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+
+          imageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+          imageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+          imageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+          imageView.heightAnchor.constraint(equalToConstant: 100),
+
+          containerView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20)
+        ])
+      }
+    
+    // MARK: - SFSymbol 표시
     func setupSFSymbols() {
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
