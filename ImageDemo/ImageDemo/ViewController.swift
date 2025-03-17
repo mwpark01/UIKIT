@@ -24,6 +24,9 @@ class ViewController: UIViewController {
         
         // 이미지 표시
         setupImages()
+        
+        // SF Symbol 표시
+        setupSFSymbols()
     }
     
     // MARK: - UI 설정
@@ -47,9 +50,13 @@ class ViewController: UIViewController {
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             // 스택 뷰 제약조건 설정
-            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
+            
+            // 중요: 스택 뷰의 너비를 스크롤 뷰의 너비에 맞춤 (패딩 고려)
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -40)
         ])
     }
     
@@ -149,5 +156,47 @@ class ViewController: UIViewController {
             // 중요: 컨테이너 뷰의 높이 명시적으로 설정 (마지막 요소 기준)
             containerView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20)
         ])
+    }
+    
+    func setupSFSymbols() {
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // 제목 레이블
+        let titleLabel = UILabel()
+        titleLabel.text = "3. SF Symbol 표시"
+        titleLabel.font = .systemFont(ofSize: 24)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.addSubview(titleLabel)
+        
+        // SF Symbol 이미지 뷰 생성
+        if #available(iOS 13.0, *) {
+            let imageView = UIImageView()
+            let configuration = UIImage.SymbolConfiguration(pointSize: 100)
+            // 토끼 symbol
+            imageView.image = UIImage(systemName: "hare.fill", withConfiguration: configuration)
+            imageView.tintColor = .purple
+            imageView.contentMode = .scaleAspectFit
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            containerView.addSubview(imageView)
+            
+            // 스택 뷰에 컨테이너 뷰 추가
+            stackView.addArrangedSubview(containerView)
+            
+            // 제목 레이블, 이미지 뷰의 제약조건 설정
+            NSLayoutConstraint.activate([
+                titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor),
+                titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+                
+                imageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+                imageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+                imageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+                imageView.heightAnchor.constraint(equalToConstant: 100),
+                
+                // 중요: 컨테이너 뷰의 높이 명시적으로 설정 (마지막 요소 기준)
+                containerView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20)
+            ])
+        }
     }
 }
