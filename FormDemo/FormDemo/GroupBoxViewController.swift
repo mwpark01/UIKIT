@@ -15,6 +15,8 @@ class GroupBoxViewController: UIViewController {
     let toggle = UISwitch()
     let textField = UITextField()
     
+    var groupBoxConstraint: NSLayoutConstraint!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -23,6 +25,17 @@ class GroupBoxViewController: UIViewController {
         view.backgroundColor = .white
         
         setupGroupBox()
+        
+        // 키보드 알림 등록
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // 키보드 알림 해제(꼭 해제해야함.)
+        NotificationCenter.default.removeObserver(self)
     }
     
     func setupGroupBox() {
@@ -50,12 +63,16 @@ class GroupBoxViewController: UIViewController {
         textField.borderStyle = .roundedRect
         textField.placeholder = "텍스트 필드"
         // 텍스트필드의 속성을 직접 사용하기 위한 코드
-        textField.delegate = self
+        // 이벤트 처리 방식으로 변경하기 위해서 주석처리함.
+//        textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
         groupBox.addSubview(textField)
         
+        groupBoxConstraint = groupBox.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 100)
+
+        
         NSLayoutConstraint.activate([
-            groupBox.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            groupBoxConstraint,
             groupBox.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             groupBox.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             groupBox.heightAnchor.constraint(equalToConstant: 200),
@@ -69,31 +86,46 @@ class GroupBoxViewController: UIViewController {
             textField.bottomAnchor.constraint(equalTo: groupBox.bottomAnchor, constant: -10)
         ])
     }
+    
+    func moveGroupBox(forEditing: Bool) {
+        groupBoxConstraint.constant = forEditing ? -100 : 100
+    }
+    
     @objc func toggleChanged() {
-        // 토클이 켜져있는지 여부
         flag = toggle.isOn
         print("flag: \(flag)")
+        // 텍스트 필드 편집 종료
+        textField.resignFirstResponder()
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        print("키보드 표시")
+        moveGroupBox(forEditing: true)
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        print("키보드 숨김")
+        moveGroupBox(forEditing: false)
     }
 }
 
 extension GroupBoxViewController: UITextFieldDelegate {
-    // 편집 가능 여부 -> toggle 상태
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    // 편집 가능 여부 결정
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         return flag
     }
     
     // 텍스트 필드 편집 시작
     func textFieldDidBeginEditing(_ textField: UITextField) {
         print("편집 시작")
+        moveGroupBox(forEditing: true)
     }
     
     // 텍스트 필드 문자 입력
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // 현재 입력한 값
+        
         let currentText = textField.text ?? ""
-        // 현재까지 입력한 값들
         guard let stringRange = Range(range, in: currentText) else { return false }
-        // 현재까지 입력한 값들 + 현재 입력한 값
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
         
         print("실제 입력 값: \(string)")
@@ -102,9 +134,10 @@ extension GroupBoxViewController: UITextFieldDelegate {
         
         return true
     }
-     // 편집 종료
+    
+    // 필드 편집 종료
     func textFieldDidEndEditing(_ textField: UITextField) {
         print("편집 종료")
+        moveGroupBox(forEditing: false)
     }
 }
-
