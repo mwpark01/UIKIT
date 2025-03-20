@@ -7,8 +7,8 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDataSource{
-
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -16,6 +16,8 @@ class ViewController: UIViewController, UITableViewDataSource{
         
         // 테이블 뷰의 데이터 소스를 현재 뷰 컨트롤러로 설정
         tableView.dataSource = self
+        // delegate 프로토콜 추가시 꼭 추가해줘야함.
+        tableView.delegate = self
         
         view.addSubview(tableView)
     }
@@ -38,7 +40,23 @@ class ViewController: UIViewController, UITableViewDataSource{
         cell?.textLabel?.text = "Row \(indexPath.row)"
         return cell!
     }
-
-
+    
+    // MARK: - UITableViewDelegate
+    // 행이 선택되었을 때 호출
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("선택된 행: \(indexPath.row)")
+    }
+    
+    // 행의 높이를 반환
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row % 2 == 0 {
+            return 100
+        }
+        return 60
+    }
+    
+    // 행이 그려지기 직전에 호출
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.backgroundColor = indexPath.row % 2 == 0 ? .systemBackground : .secondarySystemBackground
+    }
 }
-
